@@ -1,4 +1,3 @@
-const { json } = require('express');
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
@@ -53,7 +52,7 @@ const fs = require('fs');
  */
 
 let bookFile;
-
+// Getting the array of books to be used by all routes
 fs.readFile('./db.json', 'utf8', (err, data) => {
   if (err) {
     console.error(err);
@@ -62,6 +61,7 @@ fs.readFile('./db.json', 'utf8', (err, data) => {
   bookFile = JSON.parse(data);
 });
 
+// Getting all books
 router.get('/', (req, res, next) => {
   res.send(bookFile.books);
 });
@@ -90,8 +90,9 @@ router.get('/', (req, res, next) => {
  *         description: The book was not found
  */
 
+// Getting book by id
 router.get('/:id', (req, res, next) => {
-
+  // Finding book by id, sending it if it exists
   let tempBook = bookFile.books.find(book => book.id == req.params.id);
   tempBook == undefined ? res.sendStatus(404) : res.send(tempBook);
 });
@@ -119,8 +120,9 @@ router.get('/:id', (req, res, next) => {
  *         description: Some server error
  */
 
+// Creating new book
 router.post("/", (req, res) => {
-
+// Pushing new book to temporay array and creating new file with that array
   const tempBook = bookFile;
 
   tempBook.books.push(req.body);
@@ -167,10 +169,11 @@ router.post("/", (req, res) => {
  *        description: Some error happened
  */
 
+// Updating book by id
 router.put("/:id", (req, res) => {
 
-  console.log(req.body);
-
+  // Getting all books except the one with a matching id
+  // pushing request body to array and creating new file
   let tempBook = bookFile.books.filter(book => book.id != req.params.id);
 
   tempBook.push(req.body);
@@ -206,7 +209,9 @@ router.put("/:id", (req, res) => {
  *         description: The book was not found
  */
 
+// Deleting book by id
 router.delete("/:id", (req, res) => {
+  // Getting all books except one with matching id and creating new file
   let tempBook = bookFile.books.filter(book => book.id != req.params.id);
 
   fs.writeFile("./db.json", JSON.stringify({ books: tempBook }), (err) => {
