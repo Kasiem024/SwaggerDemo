@@ -17,7 +17,12 @@ const options = {
 		},
 		servers: [
 			{
+				url: "https://swagger--api-demo.herokuapp.com",
+				description: "Live Heroku server"
+			},
+			{
 				url: "http://localhost:3000",
+				description: "For local testing"
 			},
 		],
 	},
